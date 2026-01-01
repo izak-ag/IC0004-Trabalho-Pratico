@@ -1,7 +1,10 @@
 @echo off
 
+set CPPVER=c++20 & rem Deve ser maior ou igual à 17
+
 IF "%1"=="build" (
-    g++ generate_test_cases.cpp -std=c++20 -o generator.exe
+    g++ generate_test_cases.cpp -std=%CPPVER% -o generator.exe
+    g++ utils.cpp bmk.cpp -std=%CPPVER% -O2 -o bmk.exe
 )
 
 IF "%1"=="run" (
@@ -11,6 +14,7 @@ IF "%1"=="run" (
 IF "%1"=="clear" (
     rmdir /s /q testcases
     del generator.exe
+    del bmk.exe
 )
 
 IF "%1"=="help" (
