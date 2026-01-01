@@ -12,10 +12,14 @@ map<int, tuple<pii, pii, pii>> graph_edges = {
     {15,            {       {14, 30},     {31, 60},    {61, 90}      }},
     {20,            {       {19, 40},     {41, 80},    {81, 140}     }},
     {25,            {       {24, 60},     {61, 120},   {121, 210}    }},
-    {30,            {       {29, 90},     {91, 170},   {171, 300}    }}
+  //{30,            {       {29, 90},     {91, 170},   {171, 300}    }}
 };
 
 void generate_graph(int n, int m, int& inc) {
+    // TODO: Gerar grafos com no mínimo 3 vértices de grau 1.
+    // Isso garante que não há caminho hamiltoniano e obriga
+    // os algoritmos investigarem todas as possibilidades
+
     Graph g = Graph::random(n, m)
                     .directed(false)
                     .allowMulti(false)
