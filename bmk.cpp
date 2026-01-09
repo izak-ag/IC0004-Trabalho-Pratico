@@ -2,7 +2,7 @@
 // Resolução do problema do caminho hamiltoniano usando programação dinâmica (algoritmo de Bellman–Held–Karp)
 
 #include <bits/stdc++.h>
-#include "utils.h"
+#include "utils/utils.h"
 #define forx(x, e) for (int x = 0; x < e; x++)
 
 using namespace std;
