@@ -36,7 +36,7 @@ void Benchmark::stop() {
     TimePoint end_time = chrono::high_resolution_clock::now();
     size_t end_memory_usage = max_memory_usage();
 
-    execution_time = (end_time - start_time).count();
+    execution_time = chrono::duration_cast<chrono::milliseconds>(end_time - start_time).count();
     total_memory_usage = end_memory_usage - start_memory_usage;
 }
 
@@ -47,7 +47,7 @@ void Benchmark::save_results(string filename, int n, int m) {
         content << "n,m,time,memory";
     }
 
-    content << format("\n{},{},{:.5f},{}", n, m, execution_time, total_memory_usage);
+    content << format("\n{},{},{:.4f},{}", n, m, execution_time, total_memory_usage);
     ofstream(filename+".csv", ios::app) << content.str();
 }
 
