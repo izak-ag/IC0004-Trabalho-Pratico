@@ -43,3 +43,4 @@
 # Manually added
 .vscode/*
 testcases/*
+results_*.csv
