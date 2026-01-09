@@ -4,7 +4,8 @@ set CPPVER=c++23 & rem Deve ser maior ou igual à 20
 
 IF "%1"=="build" (
     g++ generate_test_cases.cpp -std=%CPPVER% -o generator.exe
-    g++ utils.cpp bmk.cpp -std=%CPPVER% -O2 -o bmk.exe
+    g++ utils/utils.cpp bmk.cpp -std=%CPPVER% -O2 -o bmk.exe
+    g++ utils/utils.cpp sat_solver/cdcl.cpp sat.cpp -std=%CPPVER% -O2 -o sat.exe
 )
 
 IF "%1"=="run" (
@@ -14,6 +15,11 @@ IF "%1"=="run" (
         echo %%F -^> BMK
         bmk 1 < %%F
     )
+
+    FOR %%F IN (testcases\*) DO (
+        echo %%F -^> SAT
+        sat 1 < %%F
+    )
 )
 
 IF "%1"=="clear" (
@@ -21,6 +27,7 @@ IF "%1"=="clear" (
     del /q results_*.csv 2>NUL
     del generator.exe 2>NUL
     del bmk.exe 2>NUL
+    del sat.exe 2>NUL
 )
 
 IF "%1"=="help" (
