@@ -9,13 +9,15 @@ using namespace std;
 
 
 int main(int argc, char* argv[]) {
-    // TODO: Gerar modo experimento - retorna dados de memória
-    // utilizada e tempo de execução. O modo deve ser recebido
-    // por parâmetros na linha de comando.
+    bool expmode = argc > 1;
+    Benchmark bench;
 
-    auto adj = read_graph();
+    auto [adj, n, m] = read_graph();
 
-    int n = adj.size();
+    if (expmode) {
+        bench.start();
+    }
+
     bool **dp = new bool*[n];
 
     forx(i, n) {
@@ -43,9 +45,15 @@ int main(int argc, char* argv[]) {
     forx(i, n) {
         if (dp[i][(1 << n) - 1]) {
             cout << "SIM\n";
-            return 0;
+            goto end_exp;
         }
     }
 
     cout << "NAO\n";
+
+    end_exp:
+    if (expmode) {
+        bench.stop();
+        bench.save_results("results_bmk", n, m);
+    }
 }
