@@ -15,21 +15,17 @@ map<int, tuple<pii, pii, pii>> graph_edges = {
   //{30,            {       {29, 90},     {91, 170},   {171, 300}    }}
 };
 
-void generate_graph(int n, int m, int& inc) {
-    // TODO: Gerar grafos com no mínimo 3 vértices de grau 1.
-    // Isso garante que não há caminho hamiltoniano e obriga
-    // os algoritmos investigarem todas as possibilidades
+void generate_graph_file(int n, int m, int& inc) {
+    ostringstream filename;
+    filename << setw(2) << setfill('0') << inc++;
+    ofstream out("testcases/"+filename.str());
 
     Graph g = Graph::random(n, m)
                     .directed(false)
                     .allowMulti(false)
                     .allowLoops(false)
                     .connected(true)
-                    .g();
-
-    ostringstream filename;
-    filename << setw(2) << setfill('0') << inc++;
-    ofstream out("testcases/"+filename.str());
+                    .g();      
     out << g.printN().printM() << endl;
 }
 
@@ -46,7 +42,9 @@ int main() {
     for (auto [n, m]: graph_edges) {
         auto [me, mm, md] = m;
         for (auto [m_min, m_max]: {me, mm, md}) {
-            generate_graph(n, rnd.next(m_min, m_max), inc);
+            for (int i = 0; i < 3; i++){
+                generate_graph_file(n, rnd.next(m_min, m_max), inc);
+            }
         }
     }
 }
