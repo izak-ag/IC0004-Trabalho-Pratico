@@ -98,7 +98,6 @@ int main() {
         out << "n,bmk_time,sat_time,bmk_memory,sat_memory";
 
         for (auto& ln: datas[i]) {
-            cout << ln.second.n << ' ' << ln.first << endl;
             out << ln.second;
         }
     }
