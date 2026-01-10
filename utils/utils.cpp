@@ -1,6 +1,9 @@
 // Aqui ficam funções e bibliotecas que funcionam em mais de um SO
 
-#include <bits/stdc++.h>
+#include <filesystem>
+#include <format>
+#include <fstream>
+#include <iostream>
 #include "utils.h"
 #define fori(e) for (int i=0; i<e; i++)
 

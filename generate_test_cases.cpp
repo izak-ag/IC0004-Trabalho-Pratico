@@ -1,6 +1,7 @@
 // Gerador de casos de testes
 
-#include <bits/stdc++.h>
+#include <filesystem>
+#include <sstream>
 #include "jngen.h"
 #define pii pair<int, int>
 

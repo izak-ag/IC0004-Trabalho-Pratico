@@ -5,6 +5,7 @@
 */
 
 #pragma once
+#include <chrono>
 #include <vector>
 #define TimePoint std::chrono::system_clock::time_point
 
