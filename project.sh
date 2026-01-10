@@ -19,15 +19,15 @@ case "$1" in
         ./generator
 
         echo "Executando experimento"
-        
+
         for F in testcases/*; do
-        echo "$F -> BMK"
-        ./bmk 1 < "$F"
+            echo "$F -> BMK"
+            ./bmk 1 < "$F"
         done
 
         for F in testcases/*; do
-        echo "$F -> SAT"
-        ./sat 1 < "$F"
+            echo "$F -> SAT"
+            ./sat 1 < "$F"
         done
 
         ;;
