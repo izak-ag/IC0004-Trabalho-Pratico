@@ -44,5 +44,6 @@
 .vscode/*
 testcases/*
 generator
+converter
 bmk
 sat
