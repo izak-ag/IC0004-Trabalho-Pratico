@@ -1,0 +1,13 @@
+\section{Conclusão}
+
+Neste trabalho foi estudado o Problema do Caminho Hamiltoniano de forma teórica e experimental. Inicialmente, foi apresentada a definição formal do problema e provada formalmente o seu pertencimento à classe NP e sua NP-completude por meio de reduções, começando a partir do 3-SAT para o problema do Caminho Hamiltoniano Dirigido, que por sua vez foi reduzido para o caso não direcionado, que é o foco deste trabalho. 
+
+Também foram discutidos, de forma mais introdutória, métodos clássicos como backtracking e branch-and-bound, bem como heurísticas (como métodos gulosos, método de Pósa e metaheurísticas) e aproximações propostas na literatura, que embora mais rápidas não garantem exatidão. Essas abordagens foram apresentadas principalmente para contextualização. Em seguida, foram analisadas duas abordagens exatas para sua resolução: um algoritmo baseado em programação dinâmica (BMK) e uma abordagem baseada em redução para SAT resolvida por um solucionador CDCL (RedSAT).
+
+Os resultados dos experimentos mostraram que o  BMK apresenta desempenho superior em termos de tempo de execução para todas as instâncias consideradas. Por outro lado, a abordagem baseada em SAT apresentou crescimento significativamente mais rápido do tempo de execução.
+
+Em termos de uso de memória, ambas as abordagens apresentaram consumo moderado para os tamanhos considerados no experimento. Entretanto, a análise teórica indica que o consumo de memória do BMK explode a partir de valores de $n$ um pouco maiores do que os deste trabalho. Já o uso de memória no RedSAT tende a crescer de forma mais suave em relação ao BMK, ainda que o consumo seja relativamente bem alto para valores de $n$ menores.
+
+Os resultados indicam que, para instâncias pequenas e médias do Problema do Caminho Hamiltoniano, um algoritmo exato especializado é preferível a uma formulação genérica via SAT, tanto por razões de eficiência quanto de simplicidade de implementação. No entanto, para valores de $n$ suficientemente grandes ambas abordagens são computacionalmente inviáveis devido às suas complexidades exponenciais.
+
+Como trabalhos futuros, podem ser analisados o uso de heurísticas e algoritmos aproximados para instâncias maiores, onde também poem ser analisada a precisão dos mesmos (afinal, verificar a corretude da resposta é polinomial). Também podem ser investigados métodos híbridos, que combinem métodos exatos (como programação dinâmica) com heurísticas e/ou aproximações.

@@ -1,0 +1,73 @@
+\section{Resultados} \label{sec:resultados}
+
+Nesta seção são apresentados e discutidos os resultados obtidos para os dois métodos avaliados, considerando separadamente os três cenários de densidade dos grafos: esparso, médio e denso. Para cada cenário são analisados o tempo de execução e o uso de memória em função do número de vértices $n$. Para facilitar a visualização das diferenças de ordem de grandeza, todos os gráficos foram plotados com escala logarítmica no eixo correspondente ao tempo/memória (eixo y).
+
+\subsection{Cenário esparso}
+
+A \reffig{fig:esparso-tempo} apresenta o tempo médio de execução dos dois algoritmos em grafos esparsos. Observa-se que a abordagem baseada em programação dinâmica (BMK) apresenta tempos desprezíveis para $n \leq 10$ e cresce de forma acentuada a partir de $n = 15$, alcançando aproximadamente 12 segundos para $n = 25$. Por outro lado, a abordagem baseada em redução para SAT (RedSAT) apresenta crescimento muito mais rápido, passando de dezenas de milissegundos para centenas de segundos quando $n$ aumenta de 15 para 25.
+
+A \reffig{fig:esparso-memoria} mostra o consumo de memória adicional dos dois algoritmos em grafos esparsos. O uso de memória do BMK cresce de forma moderada com $n$, enquanto o RedSAT apresenta um consumo inicial significativamente maior, mas com crescimento mais suave. Para grafos maiores, os valores são semelhantes.
+
+\begin{figure}[H]
+    \centering
+    \grafico{sparse}{time}{Tempo de execução (ms)}
+    \caption{Tempo médio de execução em função de $n$ para grafos esparsos.}
+    \label{fig:esparso-tempo}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \grafico{sparse}{memory}{Memória adicional (KB)}[south east]
+    \caption{Uso médio de memória adicional em função de $n$ para grafos esparsos.}
+    \label{fig:esparso-memoria}
+\end{figure}
+
+\subsection{Cenário médio}
+
+A \reffig{fig:medio-tempo} apresenta os tempos de execução para grafos de densidade média. O comportamento observado é semelhante ao do cenário esparso. O BMK mantém desempenho superior em toda a faixa de valores testados, enquanto o RedSAT sofre uma explosão combinatória significativa para $n \geq 20$.
+
+Em relação à memória, conforme mostrado na \reffig{fig:medio-memoria}, BMK apresenta maior sensibilidade ao aumento de $n$ do que o RedSAT, especialmente para valores maiores de $n$, embora ambos permaneçam dentro de limites modestos em termos absolutos.
+
+\begin{figure}[H]
+    \centering
+    \grafico{medium}{time}{Tempo de execução (ms)}
+    \caption{Tempo médio de execução em função de $n$ para grafos de densidade média.}
+    \label{fig:medio-tempo}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \grafico{medium}{memory}{Memória adicional (KB)}[south east]
+    \caption{Uso médio de memória adicional em função de $n$ para grafos de densidade média.}
+    \label{fig:medio-memoria}
+\end{figure}
+
+\subsection{Cenário denso}
+
+A \reffig{fig:denso-tempo} mostra os tempos de execução para grafos densos. Assim como nos outros cenários, o BMK supera amplamente o RedSAT em todos os tamanhos considerados. O aumento da densidade não altera significativamente o comportamento assintótico dos tempos de execução, indicando que o fator dominante é o número de vértices.
+
+A \reffig{fig:denso-memoria} apresenta o uso de memória adicional. Neste cenário, o BMK apresenta crescimento mais acentuado do consumo de memória, chegando a ultrapassar o RedSAT para valores maiores de $n$. Isso está associado ao maior número de estados viáveis quando o grafo é mais denso.
+
+\begin{figure}[H]
+    \centering
+    \grafico{dense}{time}{Tempo de execução (ms)}
+    \caption{Tempo médio de execução em função de $n$ para grafos densos.}
+    \label{fig:denso-tempo}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \grafico{dense}{memory}{Memória adicional (KB)}[south east]
+    \caption{Uso médio de memória adicional em função de $n$ para grafos densos.}
+    \label{fig:denso-memoria}
+\end{figure}
+
+\subsection{Discussão geral}
+
+De forma geral, os resultados mostram que BMK é significativamente mais eficiente em tempo de execução para todos os tamanhos e densidades considerados, enquanto o RedSAT apresenta crescimento muito mais rápido. Em termos de memória, ambos os métodos apresentam consumo relativamente baixo em valores absolutos para os tamanhos considerados neste trabalho, não ultrapassando alguns megabytes mesmo para as maiores instâncias. 
+
+No entanto, o uso de memória é alto para valores $n$ maiores do que utilizados neste trabalho, pois ambas abordagens possuem complexidade espacial exponencial. No caso do BMK, o consumo espacial explode, uma vez que o algoritmo armazena uma tabela de tamanho $n\cdot2^n$. Por exemplo, para $n=30$ tem-se $30\cdot2^{30} > 32$ GB mesmo assumindo apenas 1 byte por entrada, tornando essa abordagem inviável em termos de memória para valores maiores de $n$.
+
+Já o RedSAT, como observado nos experimentos, tende a apresentar crescimento mais suave do consumo de memória, embora também possa se tornar inviável para instâncias suficientemente grandes dependendo do tamanho da fórmula gerada. O BMK é mais sensível ao número de vértices, enquanto o RedSAT apresenta comportamento mais estável em relação a essa variável.
+
+O principal ponto fraco do RedSAT em relação ao desempenho temporal é o custo da própria redução. A formulação gera $O(n^2)$ variáveis e $O(n^3)$ cláusulas, produzindo instâncias de SAT grandes, que são difíceis de resolver mesmo para os mais modernos solucionadores, inclusive o CDCL. De um modo geral, os resultados indicam que a redução para SAT não se mostra competitiva em termos de desempenho prático se comparado a um algoritmo especializado, ao menos no intervalo de tamanhos considerado neste trabalho.

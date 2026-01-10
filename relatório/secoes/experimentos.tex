@@ -1,0 +1,65 @@
+\section{Experimentos} \label{sec:experimentos}
+
+Esta seção descreve o desenho experimental adotado para avaliar os métodos considerados para o Problema do Caminho Hamiltoniano em grafos não direcionados e conexos. São apresentados os algoritmos comparados, a geração das instâncias de teste, as métricas utilizadas e o ambiente de execução.
+
+Como já introduzido na seção \ref{sec:metodos-resolucao}, neste trabalho foram comparadas duas abordagens: uma baseada no algoritmo de Bellman-Held-Karp (BHK) (programação dinâmica) e redução para SAT (RedSAT), utilizando o \textit{Conflict-Driven Clause Learning} (CDCL) como algoritmo solucionador~\footnote{Foi utilizada a seguinte implementação do CDCL como solucionador: \url{https://github.com/sukrutrao/SAT-Solver-CDCL.git}}. Cada método lê uma instância via entrada padrão (que por sua vez está estruturada de acordo com a descrição do trabalho), resolve o problema e registrar as métricas de execução.
+
+\subsection{Geração das instâncias}
+Para a geração dos grafos foi utilizada a biblioteca \texttt{jngen}~\footnote{\url{https://github.com/ifsmirnov/jngen}}, uma biblioteca feita para gerar testes para programação competitiva. Ela permite gerar grafos com número de vértices e arestas definidos, além de garantir conectividade (todas as instânicas geradas são conexas). Um programa foi criado apenas para gerar as instâncias, que por sua vez é executado antes dos solucionadores.
+
+Foram considerados os seguintes número de vértices nas instâncias: $n \in \{5,10,15,$ $20,25\}$. Para cada valor de $n$, foram gerados grafos com três faixas de densidade: esparsa, média e densa, definidas em de intervalos de número de arestas. Dentro de cada faixa, o número de arestas é escolhido aleatoriamente dentro do intervalo correspondente. A Tabela \ref{tab:faixas-de-densidade} mostra as faixas de densidade para cada valor de $n$.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        $n$ & Esparso & Médio & Denso \\
+        \hline
+        5  & $4$--$14$  & $15$--$4$  & $5$--$10$     \\
+        10 & $9$--$29$  & $30$--$22$ & $23$--$45$    \\
+        15 & $14$--$44$ & $45$--$52$ & $53$--$105$   \\
+        20 & $19$--$59$ & $60$--$94$ & $95$--$190$   \\
+        25 & $24$--$74$ & $75$--$149$ & $150$--$300$ \\
+        \hline
+    \end{tabular}
+    \caption{Intervalos de número de arestas por faixa de densidade para cada valor de $n$.}
+    \label{tab:faixas-de-densidade}
+\end{table}
+
+As faixas de densidade foram definidas com o número de arestas $m$ em função do número de vértices $n$. Seja $m_{\max} = \frac{n(n-1)}{2}$ o número máximo de arestas em um grafo simples e não direcionado. As três faixas foram definidas como:
+
+\begin{itemize}
+    \item \textbf{Esparso}: $n-1 \leq m < 3n$;
+    \item \textbf{Médio}: $3n \leq m < \frac{n(n-1)}{4}$;
+    \item \textbf{Denso}: $\frac{n(n-1)}{4} \leq m \leq m_{\max}$.
+\end{itemize}
+
+O limite inferior $n-1$ para grafos esparsos garante conectividade geração. $3n$ e $\frac{n(n-1)}{4}$  foram escolhidos arbitrariamente como limites inferior e superior, respectivamente, para determinar grafos médios, enquanto $m_{\max}$, por ser o número máximo de arestas, foi definido como limite superior dos grafos densos. 
+
+É válido salientar que as fórmulas para $m$ em função de $n$ não são consistentes (ex: para $n=5$, $3n>\frac{n(n-1)}{4}$), então ajustes manuais foram necessários para chegar ao resultado final descrito na Tabela~\ref{tab:faixas-de-densidade}. Dentro de cada faixa, o número de arestas é escolhido aleatoriamente dentro do intervalo correspondente para cada instância gerada. Para cada par $(n,\text{densidade})$ foram geradas três instâncias independentes, totalizando $5 \cdot 3 \cdot 3 = 45$ grafos. Cada instância foi salva em um arquivo e utilizada como entrada para ambos os solucionadores.
+
+\subsection{Métricas}
+As métricas analisadas foram:
+
+\begin{itemize}
+    \item tempo de execução (em milissegundos);
+    \item uso máximo de memória durante a execução do algoritmo (em kilobytes).
+\end{itemize}
+
+Cada solucionador foi responsável por mensurar suas próprias métricas, que por sua vez começaram a ser medidas logo após a leitura do grafo pela entrada padrão e finalizaram logo após a solução final ser impressa. O objetivo é desconsiderar tempo e memória gastas para inicialização do programa e leitura do grafo. O tempo de execução foi medido usando meios fornecidos pela biblioteca padrão do sistema para obter os \textit{timestamps} do início do final, com o resultado sendo calculado, em milissegundos, pela diferença entre ambos.
+
+Já para a memória, foi adotada a seguinte estratégia: inicialmente, mede-se a memória utilizada atualmente pelo processo; após a execução do algoritmo, obtém-se o pico de memória atingido pelo processo. A diferença entre esses dois valores corresponde à quantidade máxima adicional de memória utilizada pelo algoritmo durante sua execução. Para cada faixa $(n,\text{densidade})$, o valor reportado corresponde à média aritmética das três instâncias geradas.
+
+\subsection{Execução dos experimentos e Ambiente}
+Cada execução de um algoritmo sobre uma instância foi realizada em um processo separado, garantindo que as métricas não fossem influenciadas por execuções anteriores. Não foi imposto limite de tempo para as execuções, pois os tamanhos considerados são computacionalmente viáveis para ambos os métodos.
+
+Os experimentos foram realizados em uma máquina com as seguintes características:
+\begin{itemize}
+    \item CPU: AMD $\text{Ryzen}^{\circledR}$ 5 6600H (3,3 GHz);
+    \item Memória: 16 GB DDR5 (4800 MT/s);
+    \item Sistema operacional: $\text{Windows}^{\circledR}$ 11;
+    \item Linguagem utilizada: C++
+    \item Compilador: \texttt{g++} versão 14.2.0;
+    \item Flags de compilação: \texttt{-O2}.
+\end{itemize}
+Os dados brutos dos experimentos, bem como o código utilizado para a geração das instâncias e para a execução dos algoritmos, além das bibliotecas externas, estão disponíveis no repositório do projeto (\href{https://github.com/izak-ag/IC0004-Trabalho-Pratico}{https://github.com/izak-ag/IC0004-Trabalho-Pratico}). O projeto foi construído para também ser compilável e executável em Linux.

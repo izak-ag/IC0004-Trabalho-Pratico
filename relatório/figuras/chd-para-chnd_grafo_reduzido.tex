@@ -1,0 +1,53 @@
+\begin{tikzpicture}[
+    vertex/.style={circle, draw, minimum size=9mm, inner sep=0pt},
+    edge/.style={-, thick},
+    pathedge/.style={-, very thick, red}
+]
+
+    % Posições globais do diamante
+    \node (A) at (-2,1.5) {};
+    \node (B) at (2,2.75) {};
+    \node (C) at (2,0.25) {};
+    \node (D) at (6,1.5) {};
+    
+    % Deslocamento interno maior
+    \def\d{1.5}
+    
+    % a_in, a_mid, a_out
+    \node[vertex] (ain)  at ($(A)+(-\d,0)$) {$a_{in}$};
+    \node[vertex] (amid) at (A)            {$a_{mid}$};
+    \node[vertex] (aout) at ($(A)+(\d,0)$)  {$a_{out}$};
+    
+    % b_in, b_mid, b_out
+    \node[vertex] (bin)  at ($(B)+(-\d,0)$) {$b_{in}$};
+    \node[vertex] (bmid) at (B)            {$b_{mid}$};
+    \node[vertex] (bout) at ($(B)+(\d,0)$)  {$b_{out}$};
+    
+    % c_in, c_mid, c_out
+    \node[vertex] (cin)  at ($(C)+(-\d,0)$) {$c_{in}$};
+    \node[vertex] (cmid) at (C)            {$c_{mid}$};
+    \node[vertex] (cout) at ($(C)+(\d,0)$)  {$c_{out}$};
+    
+    % d_in, d_mid, d_out
+    \node[vertex] (din)  at ($(D)+(-\d,0)$) {$d_{in}$};
+    \node[vertex] (dmid) at (D)            {$d_{mid}$};
+    \node[vertex] (dout) at ($(D)+(\d,0)$)  {$d_{out}$};
+    
+    % Arestas internas
+    \draw[edge] (ain) -- (amid) -- (aout);
+    \draw[edge] (bin) -- (bmid) -- (bout);
+    \draw[edge] (cin) -- (cmid) -- (cout);
+    \draw[edge] (din) -- (dmid) -- (dout);
+    
+    % Arestas conforme o grafo original
+    \draw[edge] (aout) -- (bin);
+    \draw[edge] (aout) -- (cin);
+    \draw[edge] (bout) -- (cin);
+    \draw[edge] (bout) -- (din);
+    \draw[edge] (cout) -- (din);
+    
+    % Caminho destacado
+    \draw[pathedge] (ain) -- (amid) -- (aout) -- (bin) -- (bmid) -- (bout)
+                   -- (cin) -- (cmid) -- (cout) -- (din) -- (dmid) -- (dout);
+
+\end{tikzpicture}

@@ -1,0 +1,98 @@
+\begin{tikzpicture}[
+    node/.style={circle, draw, minimum size=6mm},
+    dot/.style={inner sep=0pt},
+    >=Stealth
+]
+
+    \def\xsep{3}
+    \def\ysep{1.8}
+    \def\xn{2.6*\xsep}
+    \def\ycenter{-1.85*\ysep}
+    
+    % ---------- vértice s ----------
+    \node[node] (s) at (-\xsep,\ycenter) {$s$};
+    
+    % ---------- Coluna P1 ----------
+    \node[node] (p11) at (0,0) {$v_{1,1}$};
+    \node[node] (p12) at (0,-\ysep) {$v_{1,2}$};
+    \node[node] (p13) at (0,-2*\ysep) {$v_{1,3}$};
+    \node at (0,-2.85*\ysep) {$\vdots$};
+    \node[node] (p1k) at (0,-3.7*\ysep) {$v_{1,k}$};
+    
+    \node at ($(p1k)+(0,-1.2)$) {$P_1$};
+    
+    % ---------- Coluna P2 ----------
+    \node[node] (p21) at (\xsep,0) {$v_{2,1}$};
+    \node[node] (p22) at (\xsep,-\ysep) {$v_{2,2}$};
+    \node[node] (p23) at (\xsep,-2*\ysep) {$v_{2,3}$};
+    \node at (\xsep,-2.85*\ysep) {$\vdots$};
+    \node[node] (p2k) at (\xsep,-3.7*\ysep) {$v_{2,k}$};
+    
+    \node at ($(p2k)+(0,-1.2)$) {$P_2$};
+    
+    % ---------- Reticências horizontais ----------
+    \node (hdots) at ({(\xsep+\xn)/2}, -2*\ysep) {$\cdots$};
+    
+    % Pontos auxiliares para as arestas
+    \node[dot] (L) at ($(hdots)+(-0.6,0)$) {};
+    \node[dot] (R) at ($(hdots)+(0.6,0)$) {};
+    
+    % ---------- Coluna Pn ----------
+    \node[node] (pn1) at (\xn,0) {$v_{n,1}$};
+    \node[node] (pn2) at (\xn,-\ysep) {$v_{n,2}$};
+    \node[node] (pn3) at (\xn,-2*\ysep) {$v_{n,3}$};
+    \node at (\xn,-2.85*\ysep) {$\vdots$};
+    \node[node] (pnk) at (\xn,-3.7*\ysep) {$v_{n,k}$};
+    
+    \node at ($(pnk)+(0,-1.2)$) {$P_n$};
+    
+    % ---------- vértice t ----------
+    \node[node] (t) at (\xn+\xsep,\ycenter) {$t$};
+    
+    % ---------- Arestas internas ----------
+    \foreach \a/\b in {p11/p12,p12/p13,p21/p22,p22/p23,pn1/pn2,pn2/pn3}{
+      \draw[->,bend left=20] (\a) to (\b);
+      \draw[->,bend left=20] (\b) to (\a);
+    }
+    
+    % ---------- Arestas de P1 para P2 ----------
+    \draw[->] (p11) -- (p21);
+    \draw[->] (p11) -- (p2k);
+    \draw[->] (p1k) -- (p21);
+    \draw[->] (p1k) -- (p2k);
+    
+    % ---------- Adicionado manualmente ---------
+    \def\edx{1.2}
+    \def\eix{0.25}
+    \def\eiy{0.55*\ysep}
+    
+    \draw[-] (p21) -- ++(\edx, 0);
+    \draw[-] (p21) -- ++(\edx, -\ysep);
+    \draw[-] (p2k) -- ++(\edx, 0);
+    \draw[-] (p2k) -- ++(\edx, \ysep);
+    
+    \draw[<-] (pn1) -- ++(-\edx, 0);
+    \draw[<-] (pn1) -- ++(-\edx, -\ysep);
+    \draw[<-] (pnk) -- ++(-\edx, 0);
+    \draw[<-] (pnk) -- ++(-\edx, \ysep);
+    
+    \node (hdotsTop) at ($(p21)!0.5!(pn1)$) {$\cdots$};
+    \node (hdotsBottom) at ($(p2k)!0.5!(pnk)$) {$\cdots$};
+    
+    \foreach \a in {p13,p23,pn3}{
+      \draw[-,bend left=10] (\a) to ++(\eix, -\eiy);
+      \draw[<-,bend right=10] (\a) to ++(-\eix, -\eiy);
+    }
+    
+    \foreach \a in {p1k,p2k,pnk}{
+      \draw[<-,bend right=10] (\a) to ++(\eix, \eiy);
+      \draw[-,bend left=10] (\a) to ++(-\eix, \eiy);
+    }
+    
+    % ---------- Arestas com s e t ----------
+    \draw[->] (s) -- (p11);
+    \draw[->] (s) -- (p1k);
+    \draw[->] (pn1) -- (t);
+    \draw[->] (pnk) -- (t);
+
+\end{tikzpicture}

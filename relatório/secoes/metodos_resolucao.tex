@@ -1,0 +1,61 @@
+\section{Métodos de resolução} \label{sec:metodos-resolucao}
+
+Nesta seção são apresentados e discutidos métodos para a resolução do HAMPATH. São abordados métodos exatos (corretos, mas computacionalmente caro), heurísticos e algoritmos aproximados (esses dois últimos são rápidos, mas não garantem corretude).
+
+Para resolver o HAMPATH, há diversos métodos baseados nos mais variados paradigmas, como busca exaustiva (\textit{backtracking} e \textit{branch-and-bound}), programação dinâmica (algoritmo de Bellman-Held-Karp (BHK)) e redução para outro problema conhecido (redução para SAT). Para os experimentos deste trabalho (seções \ref{sec:experimentos} e \ref{sec:resultados}) serão utilizados apenas o BHK e redução para SAT em conjunto com DPLL (um algoritmo clássico para resolver o SAT), pois estes métodos possuem complexidades temporais exponenciais, enquanto os métodos baseados em busca exaustiva possuem complexidade fatorial.
+
+Devido à NP-Completude do HAMPATH, também  há várias heurísticas e abordagens aproximadas para tratar o problema com instâncias maiores, onde os métodos exatos seriam computacionalmente muito custosos ou inviáveis. Métodos heurísticos possuem complexidades temporais mais baixas (geralmente polinomiais), mas formalmente não garantem sucesso; enquanto algoritmos aproximados garantem proximalidade da solução ótima, ainda que foquem mais em variantes do problema (por exemplo, encontrar o caminho hamiltoniano mais curto).
+
+
+\subsection{\textit{Backtracking} e \textit{branch-and-bound}} \label{subsec:backtracking_e_bb}
+
+A abordagem por \textit{backtracking} faz uma pesquisa exaustiva em profundidade que constrói incrementalmente o caminho. Começa num vértice inicial e tenta estender o caminho escolhendo sucessivamente vértices adjacentes ainda não visitados; se chega a um vértice onde não há extensão possível, volta (``\textit{backtrack}'') para tentar outro vértice no passo anterior \cite{geeksforgeeks2025}. Esse algoritmo garante encontrar um caminho hamiltoniano caso exista, mas seu tempo de execução é fatorial \cite{geeksforgeeks2025}, com valores de $n>20$ sendo proibitivos em relação ao tempo de execução.
+
+Já a abordagem por \textit{branch-and-bound} é uma melhoria do \textit{backtracking}, que tenta podar partes do espaço de busca. Nesse contexto, pode-se usar limites (por exemplo, um cálculo de custo mínimo restante) para descartar ramificações que não podem levar a uma solução melhor que a já encontrada \cite{Sergeenko2020}. Na teoria, essa poda pode melhorar o desempenho em casos favoráveis, ainda que possua complexidade fatorial. Entretanto, mesmo com poda, a complexidade ainda cresce muito rápido conforme $n$ aumenta \cite{Sergeenko2020}.
+
+
+\subsection{Programação dinâmica (BHK) \texorpdfstring{\cite{Held1962,Bellman1962}}{(Held e Karp, 1962; Bellman 1962)}} \label{subsec:programacao_dinamica}
+
+A ideia do BHK é usar um vetor de estado indexado por $(S,v)$, onde $S\subseteq V$ é um conjunto de vértices visitados e $v\in S$ é o último vértice do caminho atual. Define-se $dp[S][v]=1$ se existe um caminho que percorre exatamente os vértices de $S$ e termina em $v$. Inicialmente, para cada vértice $i$, $dp[i][i]=1$ (caminho trivial). A recursão é: para todo $S$ e $v\in S$, $dp[S][v]=\bigvee_{u\in S\backslash\{v\}}(dp[S\backslash\{v\}][u]\land(u,v)\in E)$. Ao final, se existe $v$ tal que $dp[V][v]=1$, então há caminho Hamiltoniano que termina em $v$. Esse algoritmo possui complexidade temporal de $O(n^2 2^n)$ e espacial de $O(n2^n)$.
+
+Embora exponencial, este método é muito mais rápido que os métodos em \ref{subsec:backtracking_e_bb} e consegue resolver instâncias de tamanho maior de forma exata. Suas vantagens são a otimização de repetições de subproblemas e uso eficiente de memória para compartilhar cálculos, enquanto sua limitação ainda é o crescimento exponencial, onde para $n>30$ o tempo e memória tornam-se proibitivos.
+
+
+\subsection{Redução para SAT}
+
+Outra abordagem é reduzir o caminho Hamiltoniano a um problema de SAT em CNF e usar um solucionador SAT (neste trabalho, será utilizado o CDCL (\textit{Conflict-Driven Clause Learning})). Uma modelagem padrão é introduzir $n^2$ variáveis booleanas $x_{i,j}$ (com $1\le i,j\le n$) onde $x_{i,j}$ indica que o vértice $j$ está na i-ésima posição do caminho \cite{Lyuu2022}. Então constrói-se as seguintes cláusulas em CNF:
+
+\begin{itemize}
+    \item $(x_{1j}\lor x_{2j}\lor\ldots\lor x_{nj})$ para cada $j$ (todos os vértices devem aparecer no caminho);
+    \item $(\lnot x_{ij}\lor\lnot x_{kj})$ para todo $i,j,k$ com $i\ne k$ (nenhum vértice $j$ deve aparecer 2 vezes no caminho);
+    \item $(x_{i1}\lor x_{i2}\lor\ldots\lor x_{in})$ para cada $i$ (cada posição $i$ no caminho deve ser ocupada);
+    \item $(\lnot x_{ij}\lor\lnot x_{ik})$ para todo $i,j,k$ com $j\ne k$ (nenhum par de vértices $j$ e $k$ deve ocupar a mesma posição no caminho);
+    \item $(\lnot x_{ki}\lor\lnot x_{k+1,j})$ para todo $(i,j)\not\in G$ e $k=1,2,\ldots,n-1$ (vértices $i$ e $j$ não adjacentes não podem ser adjacentes no caminho)
+\end{itemize}
+
+\noindent Essas cláusulas asseguram que qualquer atribuição verdadeira corresponde a um caminho válido (e vice-versa) \cite{Lyuu2022}. A construção resulta em $O(n^3)$ cláusulas \cite{Lyuu2022}.
+
+Com a fórmula CNF em mãos, aplica-se o algoritmo CDCL \cite{MarquesSilva1996,Bayardo1997} para solucioná-la. O CDCL é um método clássico eficaz no qual muitos dos solucionadores de SAT do estado da arte se baseiam. É inspirado no DPLL (Davis-Putnam-Logemann-Loveland), mas incorpora técnicas avançadas para aprender com os erros (conflitos) encontrados durante a busca \cite{MarquesSilva2009}.
+
+Como descrito por Marques-Silva, Lynce e Malik (2009) \cite{MarquesSilva2009}, CDCL inicia com um processo cíclico de busca e propagação. A cada etapa, o solucionador escolhe uma variável de decisão e atribui a ela um valor lógico, seguido pela aplicação iterada da regra da cláusula unitária (propagação unitária) para identificar outras variáveis que devem assumir valores específicos como consequência dessa decisão. Se durante esse processo todas os literais de uma cláusula forem avaliados como falsos, a cláusula torna-se insatisfeita; o algoritmo então declara uma situação de conflito e interrompe o avanço da busca para tratar o problema identificado.
+
+Ao identificar um conflito, o CDCL desfaz a última ação e invoca um procedimento de análise de conflito. O algoritmo examina a estrutura das atribuições recentes, geralmente representadas por um grafo de implicação, para diagnosticar a causa raiz da falha lógica. O objetivo é aprender uma nova cláusula através de uma sequência de operações de resolução, adicionando-a à fórmula original; essa nova cláusula serve para impedir que a mesma combinação de atribuições que gerou o erro ocorra novamente no futuro.
+
+Após o aprendizado da cláusula, o algoritmo executa o passo de \textit{backtracking} de maneira estratégica. O CDCL utiliza a cláusula aprendida para realizar um \textit{backtracking} não-cronológico, permitindo que o solucionador pule vários níveis da árvore de decisão para trás de uma só vez, retornando diretamente ao nível de decisão calculado pela análise de conflito (geralmente onde a nova cláusula se torna unitária), o que torna a exploração do espaço de busca significativamente mais eficiente.
+
+Assim como em \ref{subsec:programacao_dinamica}, esse método é mais rápido  do que os métodos em \ref{subsec:backtracking_e_bb}. Além disso, também há a vantagem de aproveitar o estado da arte em solucionadores de SAT (ainda que neste trabalho seja usado um método clássico), pois em vários casos esses solucionadores conseguem desempenho melhor ou igual à busca exaustiva. Porém, a desvantagem ainda é a sua complexidade temporal, que é exponencial ($O(2^n)$).
+
+\subsection{Métodos heurísticos}
+
+Heurísticas buscam caminhos Hamiltonianos de forma mais rápida do que os métodos anteriores, mas sem garantias formais de sucesso. Em geral produzem boas soluções mas podem falhar mesmo quando a solução existe.
+
+Uma estratégia comum é a busca gulosa, onde se inicia-se em um vértice qualquer e estende o caminho sempre que possível, escolhendo algum vizinho não visitado por meio de algum critério (por exemplo, escolhendo vértices de menor grau). Se o algoritmo chega em um ponto onde não é mais possível continuar (``becos sem saída''), termina a tentativa (e eventualmente reiniciar de outro vértice ou com outra ordem) ou tentar heurísticas locais.
+
+Uma outra heurística é a de Pósa \cite{shields2004,POSA1976}, que tenta escapar de ``becos'' usando rotações de caminho, usando o algoritmo PosaSearch. Outras estratégias algoritmos de busca local (tentar melhorar caminhos com trocas de vértices), meta-heurísticas (colônia de formigas, algoritmos genéticos, GRASP etc.) e técnicas específicas de instância \cite{shields2004}.
+
+
+\subsection{Métodos aproximados}
+
+Como já explicitado antes, algoritmos aproximados focam em variantes de otimização do problema e vêm com garantias de proximidade do ótimo. Monnot \cite{MONNOT2005} trata precisamente de aproximações para o problema do caminho Hamiltoniano de peso máximo com um ou dois vértices fixos ($HPP_s$ e $HPP_{s,t}$, respectivamente). Já o algoritmo de Christofides \cite{Christofides2022} fornece uma garantia de aproximação de $3/2$ para o TSP Métrico usando árvores geradoras mínimas (esse método pode ser adaptado para o HAMPATH).
+
+Forlizzi \textit{et al.} \cite{Forlizzi2005} mostram que, ao combinar uma árvore geradora mínima com um emparelhamento de caminhos cuidadosamente construído, é possível formar um multigrafo com exatamente dois vértices de grau ímpar, correspondentes aos extremos do caminho desejado. Já Wu \textit{et al.} \cite{WU2023} apresentam um algoritmo de aproximação $3/2$ para encontrar um conjunto de $k$ caminhos com o menor peso total nas arestas em grafos completos não direcionados e sem vértices inicial e final prefixados. 

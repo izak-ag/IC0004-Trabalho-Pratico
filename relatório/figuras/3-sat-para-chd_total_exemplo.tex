@@ -1,0 +1,84 @@
+\begin{tikzpicture}[
+    node/.style={circle, draw, minimum size=6mm},
+    >=Stealth
+]
+
+\def\xsep{3}
+\def\ysep{1.75}
+
+% ---------- Colunas ------------
+\foreach \i [evaluate=\i as \yy using {-(\i-1)*\ysep}] in {1,...,6} {
+  \node[node] (px\i) at (0,\yy) {$v_{x,\i}$};
+  \node[node] (py\i) at (\xsep,\yy) {$v_{y,\i}$};
+  \node[node] (pz\i) at (2*\xsep,\yy) {$v_{z,\i}$};
+  \node[node] (pw\i) at (3*\xsep,\yy) {$v_{w,\i}$};
+}
+
+\foreach \i in {x,y,z,w} {
+    \node at ($(p\i6)+(0,-1.2)$) {$P_\i$};
+}
+
+% ----------- c1 e c2 -----------
+\node[node] (c1) at (0.5*\xsep,1.25*\ysep) {$c_1$};
+\node[node] (c2) at (2.5*\xsep,1.25*\ysep) {$c_2$};
+
+% ----------- Arestas internas -----------
+\foreach \col in {px,py,pz,pw}{
+  \foreach \i in {1,...,5}{
+    \def\iinc{\the\numexpr\i+1\relax}
+    \draw[->,bend left=15, red] (\col\i) to (\col\iinc);
+    \draw[->,bend left=15] (\col\iinc) to (\col\i);
+  }
+}
+
+\draw[->,bend left=15] (px2) to (px3);
+\draw[->,bend left=15] (pw4) to (pw5);
+
+% ----------- Conexões com c1 -----------
+% Px
+\draw[->,dashed,out=45,in=210,red] (px2) to (c1);
+\draw[->,dashed,out=240,in=45,red] (c1) to (px3);
+
+% Py (invertido)
+\draw[->,dashed,out=300,in=135] (c1) to (py2);
+\draw[->,dashed,out=135,in=270] (py3) to (c1);
+
+% Pz
+\draw[->,dashed] (pz2) -- (c1);
+\draw[->,dashed] (c1) -- (pz3);
+
+% ----------- Conexões com c2 -----------
+% Px (invertido)
+\draw[->,dashed,out=180,in=30] (c2) to (px4);
+\draw[->,dashed,out=30,in=210] (px5) to (c2);
+
+% Pz (invertido)
+\draw[->,dashed,out=240,in=45] (c2) to (pz4);
+\draw[->,dashed,out=30,in=270] (pz5) to (c2);
+
+% Pw (normal)
+\draw[->,dashed,out=30,in=0,red] (pw4) to (c2);
+\draw[->,dashed,out=330,in=30,red] (c2) to (pw5);
+
+% Vértices s e t
+\path let \p1 = (px1), \p2 = (px6) in
+  node[node] (s) at (-\xsep,{(\y1+\y2)/2}) {$s$};
+
+\path let \p1 = (pw1), \p2 = (pw6) in
+  node[node] (t) at (4*\xsep,{(\y1+\y2)/2}) {$t$};
+
+\draw[->,red] (s) -- (px1);
+\draw[->] (s) -- (px6);
+\draw[->] (pw1) -- (t);
+\draw[->,red] (pw6) -- (t);
+
+% Conexões entre as colunas
+
+\foreach \a/\b in {x/y,y/z,z/w} {
+    \draw[->] (p\a1) -- (p\b1);
+    \draw[->] (p\a1) -- (p\b6);
+    \draw[->, red] (p\a6) -- (p\b1);
+    \draw[->] (p\a6) -- (p\b6);
+}
+
+\end{tikzpicture}
