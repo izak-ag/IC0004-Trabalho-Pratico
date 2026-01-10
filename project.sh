@@ -7,6 +7,9 @@ case "$1" in
         echo "Compilando \"generate_test_cases.cpp\" -> \"generator\""
         g++ generate_test_cases.cpp -std="$CPPVER" -o generator
 
+        echo "Compilando \"csv_to_latex.cpp\" -> \"converter\""
+        g++ csv_to_latex.cpp -std="$CPPVER" -o converter
+
         echo "Compilando \"bmk.cpp\" -> \"bmk\""
         g++ utils/utils.cpp bmk.cpp -std="$CPPVER" -O2 -o bmk
 
@@ -36,6 +39,7 @@ case "$1" in
         rm -rf testcases
         rm -f results_*.csv
         rm -f generator
+        rm -f converter
         rm -f bmk
         rm -f sat
         ;;

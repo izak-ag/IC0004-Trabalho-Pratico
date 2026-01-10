@@ -6,6 +6,9 @@ IF "%1"=="build" (
     echo Compilando "generate_test_cases.cpp" -^> "generator.exe"
     g++ generate_test_cases.cpp -std=%CPPVER% -o generator.exe
 
+    echo Compilando "csv_to_latex.cpp" -^> "converter.exe"
+    g++ csv_to_latex.cpp -std=%CPPVER% -o converter.exe
+
     echo Compilando "bmk.cpp" -^> "bmk.exe"
     g++ utils/utils.cpp bmk.cpp -std=%CPPVER% -O2 -o bmk.exe
 
@@ -34,6 +37,7 @@ IF "%1"=="clear" (
     rmdir /s /q testcases 2>NUL
     del /q results_*.csv 2>NUL
     del generator.exe 2>NUL
+    del converter.exe 2>NUL
     del bmk.exe 2>NUL
     del sat.exe 2>NUL
 )
