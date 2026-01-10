@@ -43,7 +43,6 @@
 # Manually added
 .vscode/*
 testcases/*
-results_*.csv
 generator
 bmk
 sat
