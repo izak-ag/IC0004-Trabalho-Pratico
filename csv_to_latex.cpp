@@ -59,7 +59,7 @@ void comma_to_space(string& str) {
 }
 
 int main() {
-    ifstream bmk("results_bmk.csv"), sat("results_sat.csv");
+    ifstream bmk("results/results_bmk.csv"), sat("results/results_sat.csv");
 
     if (!bmk || !sat) return 1;
 
@@ -94,7 +94,7 @@ int main() {
     string fn[] = {"sparse", "medium", "dense"};
 
     for (int i = 0; i < 3; i++) {
-        ofstream out("results_" + fn[i] + ".csv", ios::app);
+        ofstream out("results/results_" + fn[i] + ".csv", ios::app);
         out << "n,bmk_time,sat_time,bmk_memory,sat_memory";
 
         for (auto& ln: datas[i]) {

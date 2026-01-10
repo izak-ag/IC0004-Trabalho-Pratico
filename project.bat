@@ -35,7 +35,7 @@ IF "%1"=="run" (
 
 IF "%1"=="clear" (
     rmdir /s /q testcases 2>NUL
-    del /q results_*.csv 2>NUL
+    rmdir /s /q results 2>NUL
     del generator.exe 2>NUL
     del converter.exe 2>NUL
     del bmk.exe 2>NUL

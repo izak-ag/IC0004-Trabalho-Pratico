@@ -36,8 +36,8 @@ case "$1" in
         ;;
 
     "clear")
-        rm -rf testcases
-        rm -f results_*.csv
+        rm -fr testcases
+        rm -fr results
         rm -f generator
         rm -f converter
         rm -f bmk

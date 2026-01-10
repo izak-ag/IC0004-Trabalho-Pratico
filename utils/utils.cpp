@@ -46,12 +46,16 @@ void Benchmark::stop() {
 void Benchmark::save_results(string filename, int n, int m) {
     ostringstream content;
 
-    if (!fs::exists(filename+".csv")) {
+    if (!fs::exists("results")) {
+        fs::create_directory("results");
+    }
+
+    if (!fs::exists("results/"+filename+".csv")) {
         content << "n,m,time,memory";
     }
 
     content << format("\n{},{},{:.4f},{}", n, m, execution_time, total_memory_usage);
-    ofstream(filename+".csv", ios::app) << content.str();
+    ofstream("results/"+filename+".csv", ios::app) << content.str();
 }
 
 
