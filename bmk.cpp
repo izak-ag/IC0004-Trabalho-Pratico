@@ -1,7 +1,8 @@
 // Fortemente baseado em: https://www.geeksforgeeks.org/competitive-programming/hamiltonian-path-using-dynamic-programming/
 // Resolução do problema do caminho hamiltoniano usando programação dinâmica (algoritmo de Bellman–Held–Karp)
 
-#include <bits/stdc++.h>
+#include <iostream>
+#include <cstring>
 #include "utils/utils.h"
 #define forx(x, e) for (int x = 0; x < e; x++)
 

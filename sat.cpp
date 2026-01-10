@@ -1,4 +1,6 @@
-#include <bits/stdc++.h>
+// Resolução do problema do caminho hamiltoniano reduzindo-o para SAT e solucionando com CDCL
+
+#include <iostream>
 #include "utils/utils.h"
 #include "sat_solver/cdcl.h"
 #define pii pair<int, int>
@@ -22,6 +24,7 @@ int main(int argc, char* argv[]) {
     vector<vector<int>> clauses;
 
     // Vide página 4 de https://www.csie.ntu.edu.tw/~lyuu/complexity/2011/20111018.pdf
+    // Redução de HAMPATH para SAT
 
     // 1
     for (int j = 0; j < n; ++j) {
