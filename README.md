@@ -20,9 +20,6 @@ O padrão C++20 também é suportado, mas nesse caso é necessário alterar a va
 
 O sistema operacional deve ser ou **Windows** ou **Linux**. O projeto pode ser executado em ambos sem restrições ou limitações.
 
-Segue a versão **revisada, padronizada e adequada para a seção de execução do README**:
-
----
 
 ## Execução do projeto
 
