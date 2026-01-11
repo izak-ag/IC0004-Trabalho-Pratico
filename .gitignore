@@ -43,6 +43,7 @@
 # Manually added
 .vscode/*
 testcases/*
+results/*
 generator
 converter
 bmk
