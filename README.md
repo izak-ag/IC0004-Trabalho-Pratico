@@ -81,7 +81,7 @@ project clear
 
 ### Extra: geração de gráficos
 
-O relatório utiliza arquivos CSV em um formato específico, diferente do gerado diretamente pelo experimento. Por esse motivo, é necessária uma conversão prévia.
+Para gerar os gráficos, o relatório utiliza arquivos CSV em um formato específico, diferente do gerado diretamente pelo experimento. Por esse motivo, é necessária uma conversão prévia.
 
 O conversor já está incluído no projeto e é compilado automaticamente ao executar `project build`. Com os arquivos de resultados presentes no diretório `results`, execute:
 
@@ -98,3 +98,11 @@ No Linux:
 ```
 
 Isso gerará os arquivos no formato adequado para a construção dos gráficos no relatório (`results_sparse.csv`, `results_medium.csv` e `results_sparse.csv`). No relatório, os arquivos convertidos devem estar na pasta [`resultados`](./relatório/resultados/).
+
+## Componentes de terceiros
+
+Este projeto utiliza os seguintes componentes de terceiros, que estão incluídos no repositório:
+
+* [`jngen`](https://github.com/ifsmirnov/jngen): Biblioteca utilizada para a geração de grafos para os casos de teste. Disponível no arquivo [`jngen.h`](./jngen.h).
+
+* [`SAT-Solver-CDCL`](https://github.com/sukrutrao/SAT-Solver-CDCL): Implementação do algoritmo CDCL utilizada como solucionador SAT nos experimentos. Disponível no diretório [`sat_solver`](./sat_solver/).
