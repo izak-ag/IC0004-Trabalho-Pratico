@@ -97,7 +97,7 @@ No Linux:
 ./converter
 ```
 
-Isso gerará os arquivos no formato adequado para a construção dos gráficos no relatório (`results_sparse.csv`, `results_medium.csv` e `results_sparse.csv`). No relatório, os arquivos convertidos devem estar na pasta [`resultados`](./relatório/resultados/).
+Isso gerará os arquivos no formato adequado para a construção dos gráficos no relatório (`results_sparse.csv`, `results_medium.csv` e `results_dense.csv`). No relatório, os arquivos convertidos devem estar na pasta [`resultados`](./relatório/resultados/).
 
 ## Componentes de terceiros
 
